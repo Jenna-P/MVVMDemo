@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.example.mvvmdemo.R;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import model.Model;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        observer(model);
+
         editText = (EditText)findViewById(R.id.editText);
         editText.setText(model.getData());
         btnOK = (Button)findViewById(R.id.btnOK);
@@ -38,4 +44,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void observer(Model model) {
+        model.addObserver(new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                if (o instanceof Model) {
+                    String data = ((Model) o).getData();
+                    TextView outputView = (TextView) findViewById(R.id.textView);
+                    outputView.setText(data);
+                }            }
+        });
+    }
+
+
 }
