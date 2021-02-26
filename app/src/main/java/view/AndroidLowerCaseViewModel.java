@@ -38,7 +38,7 @@ public class AndroidLowerCaseViewModel {
         return pd;
     }
 
-    public void setPd(MutableLiveData<String> pd) {
-        this.pd = pd;
+    public void setData(String data) {
+        model.setData(data);
     }
 }
