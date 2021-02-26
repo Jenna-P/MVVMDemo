@@ -1,8 +1,6 @@
 package view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.Observer;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +10,8 @@ import android.widget.TextView;
 
 import com.example.mvvmdemo.R;
 
-
-
-
-import model.Model;
+import java.util.Observable;
+import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
 
    // private Model model = new Model();
-    private AndroidLowerCaseViewModel androidLCViewModel = new AndroidLowerCaseViewModel();
+    private LowerCasePresenter lowerCaseVM = new LowerCasePresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
        observerViewModel();
 
         editText = (EditText)findViewById(R.id.editText);
-        editText.setText(androidLCViewModel.getPd().getValue());
+        editText.setText(lowerCaseVM.getPresentableData());
         btnOK = (Button)findViewById(R.id.btnOK);
         //textView = (TextView)findViewById(R.id.textView);
 
@@ -42,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String inputText = editText.getText().toString();
-                androidLCViewModel.setData(inputText);
-                textView.setText(androidLCViewModel.getPd().getValue());
+                lowerCaseVM.setData(inputText);
+                textView.setText(lowerCaseVM.getPresentableData());
             }
         });
     }
@@ -61,18 +57,29 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     private void observerViewModel() {
-
-
-        final Observer<String> stringObserver = new Observer<String>() {
+        lowerCaseVM.addObserver(new Observer() {
             @Override
-            public void onChanged(String s) {
-                textView = (TextView)findViewById(R.id.textView);
-                textView.setText(s);
+            public void update(Observable o, Object arg) {
+                if (o instanceof LowerCasePresenter) {
+                    String data = ((LowerCasePresenter) o).getPresentableData();
+                    textView = (TextView) findViewById(R.id.textView);
+                    textView.setText(data);
+                }
             }
-        };
+        });
 
-       androidLCViewModel.getPd().observe(this, stringObserver);
     }
+
+//        //final Observer<String> stringObserver = new Observer<String>() {
+//            @Override
+//            public void onChanged(String s) {
+//                textView = (TextView)findViewById(R.id.textView);
+//                textView.setText(s);
+//            }
+//        };
+//
+//
+//    }
 
 
 }

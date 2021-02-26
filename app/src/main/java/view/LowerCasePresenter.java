@@ -7,13 +7,13 @@ import java.util.Observer;
 
 import model.Model;
 
-public class AndroidLowerCaseViewModel {
+public class LowerCasePresenter extends Observable {
     private Model model = new Model();
-    private MutableLiveData<String> pd = new MutableLiveData<>();
+    private String presentableData;
 
-    public AndroidLowerCaseViewModel() {
+    public LowerCasePresenter() {
         observeModel(model);
-        pd.setValue(getTransformedData(model.getData()));
+        presentableData = getTransformedData(model.getData());
 
 
     }
@@ -24,7 +24,12 @@ public class AndroidLowerCaseViewModel {
             public void update(Observable o, Object arg) {
                 if (o instanceof Model) {
                     String data = ((Model) o).getData();
-                    pd.setValue(getTransformedData(data));
+                    presentableData = getTransformedData(data);
+
+                    LowerCasePresenter.super.setChanged();
+                    LowerCasePresenter.super.notifyObservers();
+
+
                 }
             }
         });
@@ -34,8 +39,8 @@ public class AndroidLowerCaseViewModel {
         return data.toLowerCase();
     }
 
-    public MutableLiveData<String> getPd() {
-        return pd;
+    public String getPresentableData() {
+        return presentableData;
     }
 
     public void setData(String data) {
